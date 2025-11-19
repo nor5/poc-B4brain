@@ -58,6 +58,34 @@ L'environnement est entièrement orchestré via `docker compose`
 
 - Communique avec Docker pour lancer les conteneurs sur la machine hôte depuis le conteneur Flask.
 
+## Reproduction de la POC
+### Prérequis
+- Docker et Docker Compose installés sur la machine.
+- Cloner le dépôt contenant le frontend, le backend et les fichiers de configuration.
+
+### Lancer la stack
+
+1. **Démarrer tous les conteneurs** 
+`docker compose up --build -d`
+2. **Initialiser LDAP**
+`docker exec -it openldap ldapadd -x -D "cn=admin,dc=neurospin,dc=com" -w admin_pass -f /tmp/init.ldif`
+3. **Importer la configuration Keycloak**
+`cat keycloak_dump.sql | docker exec -it postgres_db psql -U keycloak_db_user -d keykloak_db`
+4. **Initialiser la base Flask**
+```
+docker exec -it flask_backend bash 
+flask db init
+flask db migrate
+flask upgrade
+```
+### Accéder à la POC
+
+Frontend : http://localhost:5173
+
+Keycloak : http://localhost:8080
+
+PHP LDAP Admin : http://localhost:80
+
 ## Suggestions d'Amélioration pour la PoC
 
 1. **Limitation des Ressources**: Implémenter des limites de CPU et de RAM lors de la création du conteneur (via l'API Docker) pour éviter qu'un seul environnement scientifique ne monopolise les ressources de l'hôte.

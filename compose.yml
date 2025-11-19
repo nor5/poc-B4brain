@@ -9,7 +9,8 @@ services:
     volumes:
       - ./data/slapd/database:/var/lib/ldap
       - ./data/slapd/config:/etc/ldap/slapd.d
-      - ./data/slapd/ldif/init.ldif:/tmp/init.ldif 
+      - ./data_ldif/init.ldif:/tmp/init.ldif 
+      #- ./data/slapd/ldif/init.ldif:/tmp/init.ldif 
    
     environment: 
       - LDAP_ORGANISATION=neurospinorg
