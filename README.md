@@ -70,13 +70,21 @@ L'environnement est entièrement orchestré via `docker compose`
 2. **Initialiser LDAP**
 `docker exec -it openldap ldapadd -x -D "cn=admin,dc=neurospin,dc=com" -w admin_pass -f /tmp/init.ldif`
 3. **Importer la configuration Keycloak**
-`cat keycloak_dump.sql | docker exec -it postgres_db psql -U keycloak_db_user -d keykloak_db`
-4. **Initialiser la base Flask**
+`cat keycloak_dump.sql | docker exec -i postgres_db psql -U keycloak_db_user -d keycloak_db`
+4. **Assigner des rôles aux utilisateurs dans Keycloak**
+ - Accéder à l’interface Keycloak : http://localhost:8080
+ - Sélectionner le realm : *testpoc*
+ - Aller dans Users, afficher les trois utilisateurs avec * sur la recherche 
+ - Selectionner un utilisateur et dans la section  *Roles mapping* cliquer sur *Assign role* et filtrer par client .
+ - Sélectionner le rôle souhaité (*backend-api admin* ou *backend-api user*) puis cliquer sur *Assign*.
+
+
+5. **Initialiser la base Flask**
 ```
 docker exec -it flask_backend bash 
 flask db init
 flask db migrate
-flask upgrade
+flask db upgrade
 ```
 ### Accéder à la POC
 
