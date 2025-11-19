@@ -26,8 +26,8 @@
     keycloak
       .init({
         onLoad: "check-sso",
-        pkceMethod: "S256",
-        checkLoginIframe: false,
+        pkceMethod: "S256", //method pour les app SPA
+        checkLoginIframe: false, //pas check automatique de session
         scope: "openid profile email api-backend-scope",
       })
       .then((authenticated) => {

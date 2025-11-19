@@ -63,9 +63,18 @@ def create_env():
         "type": environment.type,
         "status": environment.status,
         "container_name": container_name})
+
 @env_bp.route("/environments",methods=["GET"])
+
 def get_env():
-    envs = Environment.query.all()
+    payload = decode_jwt(KEYCLOAK_CLIENT_ID, KEYCLOAK_ISSUER)
+    user_email = payload.get('email')
+    
+    user = db.session.execute(
+        db.select(User).filter_by(email=user_email)
+    ).scalar_one_or_none()
+
+    envs = user.environments
     #return jsonify([env.name for env in envs])
     return jsonify([{"name": env.name,"status": env.status} for env in envs])
 
