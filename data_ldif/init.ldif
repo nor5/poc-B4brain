@@ -1,0 +1,48 @@
+# Create organizationalUnit
+dn: ou=Users,dc=neurospin,dc=com
+objectClass: organizationalUnit
+ou: Users
+
+dn: ou=Groups,dc=neurospin,dc=com
+objectClass: organizationalUnit
+ou: Groups
+
+# Create Users
+dn: cn=jeanluc,ou=Users,dc=neurospin,dc=com
+objectClass: inetOrgPerson
+cn: jeanluc
+sn: Luc
+givenName: Jean
+uid: jeanluc
+userPassword: jeanluc_pass
+mail: jeanluc@neurospin.com
+
+dn: cn=marie,ou=Users,dc=neurospin,dc=com
+objectClass: inetOrgPerson
+cn: marie
+sn: Dupont
+givenName: Marie
+uid: marie
+userPassword: marie_pass
+mail: marie@neurospin.com
+
+dn: cn=pierre,ou=Users,dc=neurospin,dc=com
+objectClass: inetOrgPerson
+cn: pierre
+sn: Martin
+givenName: Pierre
+uid: pierre
+userPassword: pierre_pass
+mail: pierre@neurospin.com
+
+# Create Groups 
+dn: cn=SAFEPAW_TEAM,ou=Groups,dc=neurospin,dc=com
+objectClass: groupOfNames
+cn: SAFEPAW_TEAM
+member: cn=jeanluc,ou=Users,dc=neurospin,dc=com
+member: cn=marie,ou=Users,dc=neurospin,dc=com
+
+dn: cn=NEUROSTUDY,ou=Groups,dc=neurospin,dc=com
+objectClass: groupOfNames
+cn: NEUROSTUDY
+member: cn=pierre,ou=Users,dc=neurospin,dc=com
