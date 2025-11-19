@@ -23,7 +23,8 @@ def launch_environment(env_type, env_name, user_id):
         subprocess.run([
             "docker", "run", "-d",
             "--name", f"{env_name}-{user_id}",
-            "python:3.11-slim"
+            "python:3.11-slim",
+            "sleep", "3600"
         ])
     elif env_type == "jupyter-VM":
         subprocess.run([
