@@ -110,3 +110,38 @@ def delete_env(env_id):
     
 
     
+@env_bp.route("/environments/<int:env_id>/stop",methods=["PATCH"])
+def stop_env(env_id):
+
+    env = Environment.query.get_or_404(env_id)
+    try:
+        subprocess.run([
+                "docker", "stop", f"{env.name}-{env.user_id}"
+            ], check=True)
+        env.status="stopped"
+        db.session.commit()
+        
+        return jsonify({"message": "Environment stopped successfully",  "status": env.status})
+    except subprocess.CalledProcessError as e:
+        current_app.logger.warning(
+            f"Impossible d'arreter le conteneur {env.name}-{env.user_id}: {e.stderr.decode()}"
+        )
+
+@env_bp.route("/environments/<int:env_id>/start",methods=["PATCH"])
+def start_env(env_id):
+
+    env = Environment.query.get_or_404(env_id)
+    subprocess.run([
+                "docker", "start", f"{env.name}-{env.user_id}"
+            ], check=True)
+    env.status="started"
+    db.session.commit()
+
+    return jsonify({
+        "message": "Environment started",
+        "name": env.name,
+        "type": env.type,
+        "status": env.status})
+
+    
+

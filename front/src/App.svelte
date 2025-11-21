@@ -9,6 +9,7 @@
   let apiData = {};
   let isInitialized = false;
   let isLogged = false;
+  
   let envType = "";
   let envName = "";
   let showForm = false;
@@ -122,7 +123,42 @@
       console.error("Erreur lors de la supprission de l'environement ");
     }
   }
-  
+    async function stopEnvironment(id) {
+    const response = await fetch (`http://localhost:5000/api/environments/${id}/stop`, {
+      method: "PATCH",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+    if (response.ok){
+      
+      const data = await response.json();
+      // retirer l'env supprimer de la liste des env afficher de mon front
+      apiData.environments = apiData.environments.map(env =>
+      env.id === id ? { ...env, status: "stopped" } : env
+    );
+    } else {
+      console.error("Erreur lors de l'arret de l'environement ");
+    }
+  }
+  async function startEnvironment(id) {
+    const response = await fetch (`http://localhost:5000/api/environments/${id}/start`, {
+      method: "PATCH",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+    if (response.ok){
+      
+      const data = await response.json();
+      // retirer l'env supprimer de la liste des env afficher de mon front
+      apiData.environments = apiData.environments.map(env =>
+      env.id === id ? { ...env, status: "started" } : env
+    );
+    } else {
+      console.error("Erreur lors de la supprission de l'environement ");
+    }
+  }
 </script>
 
 
@@ -179,6 +215,13 @@
             <li>
               <strong>{env.name}</strong>
               <span class="env-status">{env.status}</span>
+              
+              {#if env.status !== "stopped"}
+              <button class="stop-btn" on:click={() => stopEnvironment(env.id)}> stop </button>
+              {:else}
+              <button class="start-btn" on:click={() => startEnvironment(env.id)}> start </button>
+
+              {/if}
               <button class="delete-btn" on:click={() => deleteEnvironment(env.id)}> supprimer </button>
             </li>
           {/each}

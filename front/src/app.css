@@ -268,7 +268,7 @@ input, select {
   background-color: #e74c3c;      /* red */
   color: white;
   border: none;
-  padding: 0.5rem 0.5rem;
+  padding: 0.5rem 0.2rem;
   border-radius: 6px;
   cursor: pointer;
   font-weight: bold;
@@ -281,5 +281,47 @@ input, select {
 }
 
 .delete-btn:active {
+  transform: scale(0.95);         /* click press effect */
+}
+
+/* start btn */
+.start-btn {
+  background-color: #0066ff;      /* red */
+  color: white;
+  border: none;
+  padding: 0.5rem 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.start-btn:hover {
+  background-color: #0050cc;      /* darker red on hover */
+  transform: scale(1.05);         /* subtle grow effect */
+}
+
+.start-btn:active {
+  transform: scale(0.95);         /* click press effect */
+}
+
+/* stop btn */
+.stop-btn {
+  background-color: #e74c3c;      /* red */
+  color: white;
+  border: none;
+  padding: 0.5rem 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.stop-btn:hover {
+  background-color: #c0392b;      /* darker red on hover */
+  transform: scale(1.05);         /* subtle grow effect */
+}
+
+.stop-btn:active {
   transform: scale(0.95);         /* click press effect */
 }
