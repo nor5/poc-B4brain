@@ -107,6 +107,21 @@
     }
 
     }
+  async function deleteEnvironment(id) {
+    const response = await fetch (`http://localhost:5000/api/environments/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+    if (response.ok){
+      const data = await response.json();
+      // retirer l'env supprimer de la liste des env afficher de mon front
+      apiData.environments = apiData.environments.filter(env => env.id !== id);
+    } else {
+      console.error("Erreur lors de la supprission de l'environement ");
+    }
+  }
   
 </script>
 
@@ -164,6 +179,7 @@
             <li>
               <strong>{env.name}</strong>
               <span class="env-status">{env.status}</span>
+              <button class="delete-btn" on:click={() => deleteEnvironment(env.id)}> supprimer </button>
             </li>
           {/each}
         </ul>

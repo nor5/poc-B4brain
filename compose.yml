@@ -78,24 +78,24 @@ services:
       - postgres
     networks:
       - keycloak_network
-  backend:
-    container_name: flask_backend
-    build: ./backend
-    ports:
-      - 5000:5000
-    depends_on:
-      - keycloak
-      - postgres_api
-    networks:
-      - keycloak_network
-      - app_network
-    volumes:
-     - /var/run/docker.sock:/var/run/docker.sock
-  frontend:
-    container_name: frontend
-    build: ./front
-    ports:
-      - 5173:5173
+  # backend:
+  #   container_name: flask_backend
+  #   build: ./backend
+  #   ports:
+  #     - 5000:5000
+  #   depends_on:
+  #     - keycloak
+  #     - postgres_api
+  #   networks:
+  #     - keycloak_network
+  #     - app_network
+  #   volumes:
+  #    - /var/run/docker.sock:/var/run/docker.sock
+  # frontend:
+  #   container_name: frontend
+  #   build: ./front
+  #   ports:
+  #     - 5173:5173
    
   postgres_api:
     image: postgres:18
@@ -104,6 +104,8 @@ services:
       - postgres_data_api:/var/lib/postgresql
     env_file:
       - ./.env
+    ports:
+      - "5430:5432"
     environment:
       - POSTGRES_DB=${POSTGRES_DB_api}
       - POSTGRES_USER=${POSTGRES_USER_api}

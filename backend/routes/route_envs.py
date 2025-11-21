@@ -66,8 +66,7 @@ def create_env():
         "container_name": container_name})
 
 @env_bp.route("/environments",methods=["GET"])
-
-def get_env():
+def get_envs():
     payload = decode_jwt(KEYCLOAK_CLIENT_ID, KEYCLOAK_ISSUER)
     user_email = payload.get('email')
     
@@ -77,5 +76,37 @@ def get_env():
 
     envs = user.environments
     #return jsonify([env.name for env in envs])
-    return jsonify([{"name": env.name,"status": env.status} for env in envs])
+    return jsonify([{"id": env.id,"name": env.name,"status": env.status} for env in envs])
 
+@env_bp.route("/environments/<int:env_id>",methods=["DELETE"])
+def delete_env(env_id):
+    payload = decode_jwt(KEYCLOAK_CLIENT_ID, KEYCLOAK_ISSUER)
+    user_email = payload.get('email')
+    # Récupérer l’utilisateur authentifié
+    user_roles = payload.get("resource_access", {}).get("backend-api", {}).get("roles", [])
+    if "admin" not in user_roles:
+        abort(403)
+    user = db.session.execute(
+        db.select(User).filter_by(email=user_email)
+    ).scalar_one_or_none()
+
+
+    env = Environment.query.get_or_404(env_id)
+   
+    #check if l'usr connecté a un role admin et l'env appartient bien à ce user connecté
+    if "admin" not in user_roles and env.user_id != user.id :
+        return jsonify({"message": "impossible de supprimer l'environment"})
+    try:
+        subprocess.run([
+                "docker", "rm", "-f", f"{env.name}-{env.user_id}"
+            ])
+        db.session.delete(env)
+        db.session.commit()
+        return jsonify({"message": "Environment deleted successfully"})
+    except subprocess.CalledProcessError as e:
+        current_app.logger.warning(
+            f"Impossible de supprimer le conteneur {env.name}-{env.user_id}: {e.stderr.decode()}"
+        )
+    
+
+    
